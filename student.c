@@ -3,17 +3,9 @@
 #include <unistd.h>
 #include <getch.h>
 #include <string.h>
+#include "student.h"
 
-struct Student{
-	char name[20];
-	char code[20];
-	char code_1[20];
-	char sex;
-	int id; 
-	int g_chinese;
-	int g_math;
-	int g_english;
-	}stu[100];
+struct Student stu[100];
 static int count = 0;
 static int cnt=0;
 void show_msg(const char* msg,float sec)

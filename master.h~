@@ -3,5 +3,5 @@
 struct Master{
 	char name[20];
 	char pass[10];
-}Mas[];
+}Mas;
 #endif//MASTER_H

@@ -23,23 +23,32 @@ void anykey_continue(void)
 先给Mas.pass
 */
 void rebuilt_self();
+char mas_menu();
 void get_in(void)
 {
-	strcpy(Mas.pass,"admin");
+	strcpy(Mas.tmp_pass,"admin");
+//	strcpy(Mas.true_pass,"admin");
 	char name[10]={};
 	char mima[10]={};
-	printf("请输入用户名:\n");
+	printf("请输入一个用户名:\n");
 	scanf("%s", name);
 	printf("请输入密码:\n");
 	scanf("%s", mima);
-	if(0 == strcmp(mima,Mas.pass))
+	if(0 == strcmp(Mas.true_pass,mima))
 	{
-		rebuilt_self();
+ 		if(0 == strcmp("admin",mima))
+		{
+			rebuilt_self();
+		}
+		else
+		{
+			show_msg("登录成功!\n");
+			mas_menu();
+		}
 	}
-	else
+	else 
 	{
-		printf("输入的密码有误!");
-		return;
+		show_msg("输入的密码有误!\n");
 	}
 }
 //重置自己的密码
@@ -48,35 +57,35 @@ void rebuilt_self(void)
 	char tmp_mima1[10];
 	char tmp_mima2[10];
 	char tmp_mima[10];
-	char mima[10];
-	strcpy(mima,Mas.pass);//取出结构体里面的值
+//	char mima[10];
+//	strcpy(mima,Mas.tmp_pass);//取出结构体里面的值
 	printf("请输入原来的密码:");
 	scanf("%s", tmp_mima);
 	while(1)
 	{
-		if(strcmp(tmp_mima,mima)==0)//与原始的密码对比
+		if(strcmp(Mas.tmp_pass,tmp_mima)==0)//与原始的密码对比
 		{
 			printf("\t密码正确!\n");
-			printf("\t请输入一个新密码:\n");
+			printf("请输入一个新密码:\n");
 			scanf("%s", tmp_mima1);
-			printf("\t请再次输入密码:\n");
+			printf("请再次输入密码:\n");
 			scanf("%s", tmp_mima2);
 			if(strcmp(tmp_mima1,tmp_mima2)==0)
 			{
-				printf("修改密码正确!\n");
-				strcpy(mima,tmp_mima1);//新密码代替旧密码
+				show_msg("修改密码成功!\n");
+				strcpy(Mas.true_pass,tmp_mima1);//新密码代替旧密码
 				getch();//获取字符
 				break;
 			}
 			else
 			{
-				printf("两次输入的密码不一致!修改失败\n!");
+				show_msg("两次输入的密码不一致!修改失败\n!");
 				break;
 			}
 		}
 		else
 		{
-			printf("输入的密码有误!\n");
+			show_msg("输入的密码有误!\n");
 			break;
 		}
 	}
@@ -98,17 +107,25 @@ void tch_in(void)
 void rebuilt_tch(void)
 {
 	char same[]="666666";
+	char name[10];
+	printf("请输入要重置教师的姓名:");
+	scanf("%s", name);
 	for(int i=0;i<100;i++)
 	{
-		strcpy(tch[i].pass,same);
+		if(0 == strcmp(tch[i].name,name))
+		{
+			strcpy(tch[i].pass,same);
+		}
 	}
+	show_msg("教师密码已经重置!\n");
 }
 
 void show_msg(const char* msg,float sec)
 {
 	printf("%s",msg);
 	fflush(stdout);
-	usleep(sec*1000000);
+	sleep(3);
+//	usleep(sec*1000000);
 }
 
 //添加教师
@@ -132,7 +149,7 @@ void add_tch(void)
 }
 //删除教师 按名字删除
 void del_tch(void)
-{
+{	int j=0;
 	char name[20]={};
 	printf("请输入要删除的教师姓名:");
 	scanf("%s", name);
@@ -141,6 +158,8 @@ void del_tch(void)
 	{
 		if(0 == strcmp(name,tch[i].name))
 		{
+            while(0 != tch2[j].sex)	j++;//
+			tch2[j]=tch[i];
 			show_msg("删除联系人成功!\n",1.5);
 			tch[i].sex=0;
 			count--;
@@ -148,7 +167,7 @@ void del_tch(void)
 		}
 	}
 	
-	show_msg("该教师不存在",1.5);
+	show_msg("该教师不存在!\n",1.5);
 }
 //显示所有离职教师
 void tch_out()
@@ -157,7 +176,7 @@ void tch_out()
 	{
 		if(tch2[i].sex)
 		{
-			printf("%s %s %c\n",tch2[i].name,'w'==tch2[i].sex?"女":"男",tch2[i].id);
+			printf("%s %s %d\n",tch2[i].name,'w'==tch2[i].sex?"女":"男",tch2[i].id);
 		}
 	}
 	anykey_continue();
@@ -172,6 +191,7 @@ char mas_menu(void)
 	printf("4.显示所有在职教师\n");
 	printf("5.显示所有离职教师\n");
 	printf("6.退出学生管理系统\n");
+//	printf("7.输入用户名和密码:\n");
 	printf("---------------------------\n");
 	printf("请输入指令:");
 	char cmd=getch();
@@ -180,6 +200,7 @@ char mas_menu(void)
 }
 int main(int argc,const char* argv[])
 {
+	strcpy(Mas.true_pass,"admin");
 	for(;;)
 	{
 		switch(mas_menu())
@@ -190,6 +211,7 @@ int main(int argc,const char* argv[])
 			case '4': tch_in();break; 
 			case '5': tch_out();break;
 			case '6': return 0;
+		//	case '7': get_in();break;
 		}
 	}
 }

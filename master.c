@@ -5,25 +5,17 @@
 #include "master.h"
 #include "teacher.h"
 #include <stdlib.h>
+#include "tools.h"
 
 #define COUNT_MAX 100
 
 int count=0;
 
-
-//任意键继续
-void anykey_continue(void)
-{
-	stdin->_IO_read_ptr = stdin->_IO_read_end;
-	puts("任意键继续...");
-	getch();
-}
 //获取校长的用户名和密码
 /*
 先给Mas.pass
 */
-void rebuilt_self();
-char mas_menu();
+
 void get_in(void)
 {
 	strcpy(Mas.tmp_pass,"admin");
@@ -120,20 +112,13 @@ void rebuilt_tch(void)
 	show_msg("教师密码已经重置!\n");
 }
 
-void show_msg(const char* msg,float sec)
-{
-	printf("%s",msg);
-	fflush(stdout);
-	sleep(3);
-//	usleep(sec*1000000);
-}
 
 //添加教师
 void add_tch(void)
 {
 	if(count>COUNT_MAX)
 	{
-		show_msg("系统正在升级,请稍后\n",3);
+		show_msg("系统正在升级,请稍后\n");
 		return;
 	}
 	int i=0;
@@ -145,7 +130,7 @@ void add_tch(void)
 	scanf("%s %c %d", tch[i].name,&tch[i].sex,&tch[i].id);
 	count++;
 
-	show_msg("添加教师成功!\n",0.5);
+	show_msg("添加教师成功!\n");
 }
 //删除教师 按名字删除
 void del_tch(void)
@@ -160,14 +145,14 @@ void del_tch(void)
 		{
             while(0 != tch2[j].sex)	j++;//
 			tch2[j]=tch[i];
-			show_msg("删除联系人成功!\n",1.5);
+			show_msg("删除联系人成功!\n");
 			tch[i].sex=0;
 			count--;
 			return;
 		}
 	}
 	
-	show_msg("该教师不存在!\n",1.5);
+	show_msg("该教师不存在!\n");
 }
 //显示所有离职教师
 void tch_out()
@@ -191,7 +176,7 @@ char mas_menu(void)
 	printf("4.显示所有在职教师\n");
 	printf("5.显示所有离职教师\n");
 	printf("6.退出学生管理系统\n");
-//	printf("7.输入用户名和密码:\n");
+	printf("7.输入用户名和密码:\n");
 	printf("---------------------------\n");
 	printf("请输入指令:");
 	char cmd=getch();
@@ -211,7 +196,7 @@ int main(int argc,const char* argv[])
 			case '4': tch_in();break; 
 			case '5': tch_out();break;
 			case '6': return 0;
-		//	case '7': get_in();break;
+			case '7': get_in();break;
 		}
 	}
 }
